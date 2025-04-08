@@ -17,7 +17,7 @@ class _ConcertListScreenState extends State<ConcertListScreen> {
   void initState() {
     super.initState();
     _concerts =
-        ApiService.fetchConcerts(); // Récupération des concerts depuis l'API
+        ApiService.getConcerts(); // Récupération des concerts depuis l'API
   }
 
   void _addToFavorites(BuildContext context, Concert concert) {
@@ -84,7 +84,7 @@ class _ConcertListScreenState extends State<ConcertListScreen> {
                           fontSize: 18),
                     ),
                     subtitle: Text(
-                      '${concert.date} - ${concert.lieu}',
+                      "Lieu: ${concert.lieu}\nScène: ${concert.scene}\nArtistes: ${concert.artistes.join(', ')}\nTarif: ${concert.tarif}€",
                       style: TextStyle(color: Colors.grey[400]),
                     ),
                     trailing: IconButton(

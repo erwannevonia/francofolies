@@ -19,21 +19,17 @@ class Concert {
 
   factory Concert.fromJson(Map<String, dynamic> json) {
     return Concert(
-      id: json['id'] ?? 0, // Valeur par défaut si 'id' est nul
-      artiste: json['artiste'] ??
-          "Inconnu", // Valeur par défaut si 'artiste' est nul
-      date: json['date'] ??
-          "Date inconnue", // Valeur par défaut si 'date' est nul
-      lieu:
-          json['lieu'] ?? "Lieu inconnu", // Valeur par défaut si 'lieu' est nul
-      scene: json['scene'] ??
-          "Scène inconnue", // Valeur par défaut si 'scene' est nul
+      id: json['id'] ?? 0, // Valeur par défaut
+      artiste: json['artiste'] ?? "Inconnu", // Valeur par défaut
+      date: json['date'] ?? "Date inconnue", // Valeur par défaut
+      lieu: json['lieu'] ?? "Lieu inconnu", // Valeur par défaut
+      scene: json['scene'] ?? "Scène inconnue", // Valeur par défaut
       artistes: json['artistes'] != null
           ? List<String>.from(json['artistes'])
           : [], // Liste vide si 'artistes' est nul
       tarif: json['tarif'] != null
           ? json['tarif'].toDouble()
-          : 0.0, // Valeur par défaut si 'tarif' est nul
+          : 0.0, // Valeur par défaut
     );
   }
 }

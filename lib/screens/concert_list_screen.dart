@@ -279,9 +279,9 @@ class _ConcertListScreenState extends State<ConcertListScreen> {
                           ),
                           trailing: IconButton(
                             icon: Icon(
-                              (onlyBorder
-                                  ? Icons.favorite_border
-                                  : Icons.favorite),
+                              (_favorisIds.contains(concert.id)
+                                  ? Icons.favorite
+                                  : Icons.favorite_border),
                               color: Colors.green,
                             ),
                             onPressed: () {
@@ -295,7 +295,6 @@ class _ConcertListScreenState extends State<ConcertListScreen> {
                                   // Appel API pour ajouter aux favoris
                                   ApiService.addFavori(userId, concert.id);
                                 }
-                                onlyBorder = !onlyBorder;
                                 _addToFavorites(context, concert);
                               });
                             },

@@ -13,19 +13,30 @@ class ConcertListScreen extends StatefulWidget {
 class _ConcertListScreenState extends State<ConcertListScreen> {
   late Future<List<Concert>> _concerts;
 
+  bool onlyBorder = true;
+
   @override
   void initState() {
     super.initState();
     _concerts =
         ApiService.getConcerts(); // Récupération des concerts depuis l'API
+
+    onlyBorder = true;
   }
 
   void _addToFavorites(BuildContext context, Concert concert) {
     // Ajoute un concert aux favoris (peut être stocké en local ou en base de données)
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text("${concert.artiste} ajouté aux favoris"),
         duration: const Duration(seconds: 2),
+        action: SnackBarAction(
+          label: 'Fermer',
+          onPressed: () {
+            // Some code to undo the change
+          },
+        ),
       ),
     );
   }
@@ -88,10 +99,20 @@ class _ConcertListScreenState extends State<ConcertListScreen> {
                       style: TextStyle(color: Colors.grey[400]),
                     ),
                     trailing: IconButton(
-                      icon: const Icon(Icons.favorite_border,
-                          color: Colors.green),
-                      onPressed: () => _addToFavorites(context, concert),
-                    ),
+                        //icon: Icon(Icons.favorite,
+                        icon: Icon(
+                            (onlyBorder
+                                ? Icons.favorite_border
+                                : Icons.favorite),
+                            color: Colors.green),
+                        onPressed: () {
+                          // Forcer un appel à build en mettant à jour l'état
+                          setState(() {
+                            // Inverser la valeur de onlyBorder
+                            onlyBorder = !onlyBorder;
+                            _addToFavorites(context, concert);
+                          });
+                        }),
                     onTap: () {
                       // Naviguer vers une page de détails du concert (à implémenter)
                     },

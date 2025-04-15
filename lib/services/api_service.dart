@@ -15,4 +15,18 @@ class ApiService {
       throw Exception('Failed to load concerts');
     }
   }
+
+  Future<List<Concert>> searchConcerts(
+      String scene, String date, String artiste) async {
+    final response = await http.get(Uri.parse(
+      '$baseUrl/concerts?scene=$scene&date=$date&artiste=$artiste',
+    ));
+
+    if (response.statusCode == 200) {
+      List<dynamic> jsonResponse = json.decode(response.body);
+      return jsonResponse.map((concert) => Concert.fromJson(concert)).toList();
+    } else {
+      throw Exception('Failed to load concerts');
+    }
+  }
 }

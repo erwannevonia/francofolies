@@ -21,7 +21,7 @@ class _ConcertSearchScreenPageState extends State<ConcertSearchScreenPage> {
   final ApiService apiService = ApiService();
 
   void _searchConcerts() async {
-    var results = await apiService.searchConcerts(
+    var results = await ApiService.fetchConcerts(
       sceneController.text,
       dateController.text,
       artisteController.text,
@@ -34,29 +34,29 @@ class _ConcertSearchScreenPageState extends State<ConcertSearchScreenPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Recherche avancée')),
+      appBar: AppBar(title: const Text('Recherche avancée')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
             TextField(
               controller: sceneController,
-              decoration: InputDecoration(labelText: 'Scène'),
+              decoration: const InputDecoration(labelText: 'Scène'),
             ),
             TextField(
               controller: dateController,
-              decoration: InputDecoration(labelText: 'Date'),
+              decoration: const InputDecoration(labelText: 'Date'),
             ),
             TextField(
               controller: artisteController,
-              decoration: InputDecoration(labelText: 'Artiste'),
+              decoration: const InputDecoration(labelText: 'Artiste'),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             ElevatedButton(
               onPressed: _searchConcerts,
-              child: Text('Rechercher'),
+              child: const Text('Rechercher'),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Expanded(
               child: ListView.builder(
                 itemCount: concerts.length,
@@ -65,7 +65,9 @@ class _ConcertSearchScreenPageState extends State<ConcertSearchScreenPage> {
                   return ListTile(
                     title: Text(concert.artiste),
                     subtitle: Text(
-                        "Lieu: ${concert.lieu}\nScène: ${concert.scene}\nDate: ${concert.date}\nTarif: ${concert.tarif}€"),
+                      '${concert.scene} - ${concert.date}',
+                      style: TextStyle(color: Colors.grey[400]),
+                    ),
                   );
                 },
               ),

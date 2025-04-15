@@ -31,6 +31,7 @@ dependencies:
   flutter:
     sdk: flutter
   http: ^1.2.2 # Utilisé pour les requêtes HTTP vers l'API Node.js
+  intl: ^0.18.1
 
 
 

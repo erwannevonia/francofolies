@@ -20,16 +20,16 @@ class _ConcertSearchScreenPageState extends State<ConcertSearchScreenPage> {
 
   final ApiService apiService = ApiService();
 
-  void _searchConcerts() async {
-    var results = await ApiService.fetchConcerts(
-      sceneController.text,
-      dateController.text,
-      artisteController.text,
-    );
-    setState(() {
-      concerts = results;
-    });
-  }
+  // void _searchConcerts() async {
+  //   var results = await ApiService.fetchConcerts(
+  //     sceneController.text,
+  //     dateController.text,
+  //     artisteController.text,
+  //   );
+  //   setState(() {
+  //     concerts = results;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -52,10 +52,10 @@ class _ConcertSearchScreenPageState extends State<ConcertSearchScreenPage> {
               decoration: const InputDecoration(labelText: 'Artiste'),
             ),
             const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: _searchConcerts,
-              child: const Text('Rechercher'),
-            ),
+            // ElevatedButton(
+            //   onPressed: _searchConcerts,
+            //   child: const Text('Rechercher'),
+            // ),
             const SizedBox(height: 16),
             Expanded(
               child: ListView.builder(

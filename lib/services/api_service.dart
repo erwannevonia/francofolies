@@ -30,6 +30,14 @@ class ApiService {
     }
   }
 
+  static Future<List<Concert>> fuiteConcerts({
+    String? scene,
+    String? date,
+    String? artiste,
+  }) {
+    return fetchConcerts(scene, date, artiste);
+  }
+
   static Future<List<Concert>> fetchConcerts(
       String? scene, String? date, String? artiste) async {
     final queryParameters = {
@@ -38,9 +46,11 @@ class ApiService {
       if (artiste != null && artiste.isNotEmpty) 'artiste': artiste,
     };
 
-    final uri = Uri.http(baseUrl, '/concerts', queryParameters);
+    final uri = Uri.parse('$baseUrl/concerts')
+        .replace(queryParameters: queryParameters);
 
     final response = await http.get(uri);
+    print('Requête envoyée vers : $uri');
 
     if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(response.body);

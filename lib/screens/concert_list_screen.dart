@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import '../services/api_service.dart';
 import '../models/concert.dart';
+import 'package:intl/intl.dart';
 
 class ConcertListScreen extends StatefulWidget {
   const ConcertListScreen({super.key});
@@ -13,8 +14,13 @@ class ConcertListScreen extends StatefulWidget {
 
 class _ConcertListScreenState extends State<ConcertListScreen> {
   late Future<List<Concert>> _concerts;
+  Set<int> _favorisIds = {};
 
   bool onlyBorder = true;
+
+  final TextEditingController artisteController = TextEditingController();
+  final TextEditingController sceneController = TextEditingController();
+  final TextEditingController dateController = TextEditingController();
 
   @override
   void initState() {
@@ -40,6 +46,38 @@ class _ConcertListScreenState extends State<ConcertListScreen> {
         ),
       ),
     );
+  }
+
+  void _reset() {
+    artisteController.text = '';
+    sceneController.text = '';
+    dateController.text = '';
+    setState(() {
+      _concerts =
+          ApiService.getConcerts(); // Récupération des concerts depuis l'API
+    });
+  }
+
+  void _searchConcerts() {
+    final dateText = dateController.text;
+    String? formattedDate;
+
+    if (dateText.isNotEmpty) {
+      try {
+        final parsedDate = DateFormat('dd/MM/yyyy').parseStrict(dateText);
+        formattedDate = DateFormat('yyyy-MM-dd').format(parsedDate);
+      } catch (e) {
+        print("Erreur de parsing date : $e");
+      }
+    }
+
+    setState(() {
+      _concerts = ApiService.fuiteConcerts(
+        artiste: artisteController.text.trim(),
+        scene: sceneController.text.trim(),
+        date: formattedDate,
+      );
+    });
   }
 
   @override
@@ -76,55 +114,209 @@ class _ConcertListScreenState extends State<ConcertListScreen> {
                   style: TextStyle(color: Colors.white)),
             );
           } else {
-            return ListView.builder(
-              padding: const EdgeInsets.all(10),
-              itemCount: snapshot.data!.length,
-              itemBuilder: (context, index) {
-                Concert concert = snapshot.data![index];
-                return Card(
-                  color: Colors.grey[900],
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15)),
-                  margin: const EdgeInsets.symmetric(vertical: 8),
-                  child: ListTile(
-                    contentPadding: const EdgeInsets.all(10),
-                    title: Text(
-                      concert.artiste,
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18),
-                    ),
-                    subtitle: Text(
-                      // "Lieu: ${concert.lieu}\nScène: ${concert.scene}\nArtistes: ${concert.artistes.join(', ')}\nTarif: ${concert.tarif}€",
-                      '${concert.scene} - ${concert.date}',
-                      style: TextStyle(color: Colors.grey[400]),
-                    ),
-                    trailing: IconButton(
-                        //icon: Icon(Icons.favorite,
-                        icon: Icon(
-                            (onlyBorder
-                                ? Icons.favorite_border
-                                : Icons.favorite),
-                            color: Colors.green),
-                        onPressed: () {
-                          // Forcer un appel à build en mettant à jour l'état
-                          setState(() {
-                            // Inverser la valeur de onlyBorder
-                            onlyBorder = !onlyBorder;
-                            _addToFavorites(context, concert);
-                          });
-                        }),
-                    onTap: () {
-                      // Naviguer vers une page de détails du concert (à implémenter)
+            // return ListView.builder(
+            //   padding: const EdgeInsets.all(10),
+            //   itemCount: snapshot.data!.length,
+            //   itemBuilder: (context, index) {
+            //     Concert concert = snapshot.data![index];
+            //     return Card(
+            //       color: Colors.grey[900],
+            //       shape: RoundedRectangleBorder(
+            //           borderRadius: BorderRadius.circular(15)),
+            //       margin: const EdgeInsets.symmetric(vertical: 8),
+            //       child: ListTile(
+            //         contentPadding: const EdgeInsets.all(10),
+            //         title: Text(
+            //           concert.artiste,
+            //           style: const TextStyle(
+            //               color: Colors.white,
+            //               fontWeight: FontWeight.bold,
+            //               fontSize: 18),
+            //         ),
+            //         subtitle: Text(
+            //           // "Lieu: ${concert.lieu}\nScène: ${concert.scene}\nArtistes: ${concert.artistes.join(', ')}\nTarif: ${concert.tarif}€",
+            //           '${concert.scene} - ${concert.date}',
+            //           style: TextStyle(color: Colors.grey[400]),
+            //         ),
+            //         trailing: IconButton(
+            //             //icon: Icon(Icons.favorite,
+            //             icon: Icon(
+            //                 (onlyBorder
+            //                     ? Icons.favorite_border
+            //                     : Icons.favorite),
+            //                 color: Colors.green),
+            //             onPressed: () {
+            //               // Forcer un appel à build en mettant à jour l'état
+            //               setState(() {
+            //                 // Inverser la valeur de onlyBorder
+            //                 onlyBorder = !onlyBorder;
+            //                 _addToFavorites(context, concert);
+            //               });
+            //             }),
+            //         onTap: () {
+            //           // Naviguer vers une page de détails du concert (à implémenter)
+            //         },
+            //       ),
+            //     );
+            //   },
+            // );
+            return Column(
+              children: [
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: Column(
+                    children: [
+                      TextField(
+                        controller: artisteController,
+                        style: const TextStyle(color: Colors.white),
+                        decoration: const InputDecoration(
+                          labelText: 'Artiste',
+                          labelStyle: TextStyle(color: Colors.white),
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white),
+                          ),
+                        ),
+                      ),
+                      TextField(
+                        controller: sceneController,
+                        style: const TextStyle(color: Colors.white),
+                        decoration: const InputDecoration(
+                          labelText: 'Scène',
+                          labelStyle: TextStyle(color: Colors.white),
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white),
+                          ),
+                        ),
+                      ),
+                      TextField(
+                        controller: dateController,
+                        readOnly: true,
+                        style: const TextStyle(color: Colors.white),
+                        decoration: const InputDecoration(
+                          labelText: 'Date',
+                          labelStyle: TextStyle(color: Colors.white),
+                          filled: true,
+                          fillColor: Color.fromARGB(0, 158, 158, 158),
+                          border: OutlineInputBorder(),
+                          suffixIcon:
+                              Icon(Icons.calendar_today, color: Colors.white),
+                        ),
+                        onTap: () async {
+                          DateTime? pickedDate = await showDatePicker(
+                            context: context,
+                            initialDate: DateTime.now(),
+                            firstDate: DateTime(2020),
+                            lastDate: DateTime(2030),
+                            builder: (context, child) {
+                              return Theme(
+                                data: Theme.of(context).copyWith(
+                                  colorScheme: const ColorScheme.dark(
+                                    primary: Colors.green,
+                                    onPrimary: Colors.white,
+                                    surface: Colors.black,
+                                    onSurface: Colors.white,
+                                  ),
+                                  dialogBackgroundColor: Colors.grey[900],
+                                ),
+                                child: child!,
+                              );
+                            },
+                          );
+
+                          if (pickedDate != null) {
+                            String formatted =
+                                DateFormat('dd/MM/yyyy').format(pickedDate);
+                            setState(() {
+                              dateController.text = formatted;
+                            });
+                          }
+                        },
+                      ),
+                      const SizedBox(height: 10),
+                      const SizedBox(height: 10),
+                      ElevatedButton(
+                        onPressed: _searchConcerts,
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.green),
+                        child: const Text('Rechercher'),
+                      ),
+                      ElevatedButton(
+                        onPressed: _reset,
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.green),
+                        child: const Text('Vider les filtres'),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Expanded(
+                  child: ListView.builder(
+                    padding: const EdgeInsets.all(10),
+                    itemCount: snapshot.data!.length,
+                    itemBuilder: (context, index) {
+                      Concert concert = snapshot.data![index];
+                      return Card(
+                        color: Colors.grey[900],
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15)),
+                        margin: const EdgeInsets.symmetric(vertical: 8),
+                        child: ListTile(
+                          contentPadding: const EdgeInsets.all(10),
+                          title: Text(
+                            concert.artiste,
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18),
+                          ),
+                          subtitle: Text(
+                            '${concert.scene} - ${concert.date}',
+                            style: TextStyle(color: Colors.grey[400]),
+                          ),
+                          trailing: IconButton(
+                            icon: Icon(
+                              (onlyBorder
+                                  ? Icons.favorite_border
+                                  : Icons.favorite),
+                              color: Colors.green,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                if (_favorisIds.contains(concert.id)) {
+                                  _favorisIds.remove(concert.id);
+                                  // Appel API pour supprimer des favoris
+                                  ApiService.removeFavori(userId, concert.id);
+                                } else {
+                                  _favorisIds.add(concert.id);
+                                  // Appel API pour ajouter aux favoris
+                                  ApiService.addFavori(userId, concert.id);
+                                }
+                                onlyBorder = !onlyBorder;
+                                _addToFavorites(context, concert);
+                              });
+                            },
+                          ),
+                          onTap: () {
+                            // Navigation vers les détails (à faire plus tard)
+                          },
+                        ),
+                      );
                     },
                   ),
-                );
-              },
+                ),
+              ],
             );
           }
         },
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    dateController.dispose();
+    super.dispose();
   }
 }

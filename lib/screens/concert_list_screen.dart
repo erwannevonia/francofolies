@@ -18,6 +18,8 @@ class _ConcertListScreenState extends State<ConcertListScreen> {
 
   bool onlyBorder = true;
 
+  int userId = 1;
+
   final TextEditingController artisteController = TextEditingController();
   final TextEditingController sceneController = TextEditingController();
   final TextEditingController dateController = TextEditingController();

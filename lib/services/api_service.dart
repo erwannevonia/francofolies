@@ -50,13 +50,48 @@ class ApiService {
         .replace(queryParameters: queryParameters);
 
     final response = await http.get(uri);
-    print('Requête envoyée vers : $uri');
 
     if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(response.body);
       return data.map((json) => Concert.fromJson(json)).toList();
     } else {
       throw Exception('Erreur de chargement des concerts');
+    }
+  }
+
+  static Future<void> addFavori(
+      int? userId, int? concertId) async {
+    final queryParameters = {
+      if (userId != null) 'userId': userId,
+      if (concertId != null) 'concertId': concertId,
+    };
+
+    final uri = Uri.parse('$baseUrl/addFavori')
+        .replace(queryParameters: queryParameters);
+
+    final response = await http.get(uri);
+
+    if (response.statusCode == 200) {
+    } else {
+      throw Exception('Erreur d\'ajout du concert en favori');
+    }
+  }
+
+  static Future<void> removeFavori(
+      int? userId, int? concertId) async {
+    final queryParameters = {
+      if (userId != null) 'userId': userId,
+      if (concertId != null) 'concertId': concertId,
+    };
+
+    final uri = Uri.parse('$baseUrl/removeFavori')
+        .replace(queryParameters: queryParameters);
+
+    final response = await http.get(uri);
+
+    if (response.statusCode == 200) {
+    } else {
+      throw Exception('Erreur de la supppression du concert en favori');
     }
   }
 }

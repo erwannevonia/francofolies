@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import '../services/api_service.dart';
 import '../models/concert.dart';
-import 'package:intl/intl.dart';
 
 class ConcertListScreen extends StatefulWidget {
   const ConcertListScreen({super.key});
@@ -13,36 +12,9 @@ class ConcertListScreen extends StatefulWidget {
 }
 
 class _ConcertListScreenState extends State<ConcertListScreen> {
-  TextEditingController artisteController = TextEditingController();
-  TextEditingController sceneController = TextEditingController();
-  DateTime? selectedDate;
-
-  List<Concert> concertList = []; // La liste à afficher
-
-  Future<void> fetchFilteredConcerts() async {
-    final concerts = await ApiService.fetchConcerts(
-      scene: sceneController.text,
-      date: selectedDate != null
-          ? DateFormat('yyyy-MM-dd').format(selectedDate!)
-          : null,
-      artiste: artisteController.text,
-    );
-
-    setState(() {
-      concertList = concerts;
-    });
-  }
-
   late Future<List<Concert>> _concerts;
 
   bool onlyBorder = true;
-
-  @override
-  void dispose() {
-    artisteController.dispose();
-    sceneController.dispose();
-    super.dispose();
-  }
 
   @override
   void initState() {
@@ -51,7 +23,6 @@ class _ConcertListScreenState extends State<ConcertListScreen> {
         ApiService.getConcerts(); // Récupération des concerts depuis l'API
 
     onlyBorder = true;
-    fetchFilteredConcerts();
   }
 
   void _addToFavorites(BuildContext context, Concert concert) {

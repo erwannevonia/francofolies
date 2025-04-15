@@ -11,6 +11,26 @@ class ConcertListScreen extends StatefulWidget {
 }
 
 class _ConcertListScreenState extends State<ConcertListScreen> {
+  TextEditingController artisteController = TextEditingController();
+  TextEditingController sceneController = TextEditingController();
+  DateTime? selectedDate;
+
+  List<Concert> concertList = []; // La liste à afficher
+
+  Future<void> fetchFilteredConcerts() async {
+    final concerts = await ApiService.fetchConcerts(
+      artiste: artisteController.text,
+      scene: sceneController.text,
+      date: selectedDate != null
+          ? DateFormat('yyyy-MM-dd').format(selectedDate!)
+          : null,
+    );
+
+    setState(() {
+      concertList = concerts;
+    });
+  }
+
   late Future<List<Concert>> _concerts;
 
   bool onlyBorder = true;

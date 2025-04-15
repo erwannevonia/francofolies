@@ -2,12 +2,16 @@ import 'package:flutter/material.dart';
 import '../services/api_service.dart';
 import '../models/concert.dart';
 
-class ConcertSearchPage extends StatefulWidget {
+class ConcertSearchScreenPage extends StatefulWidget {
+  const ConcertSearchScreenPage({super.key});
+
   @override
-  _ConcertSearchPageState createState() => _ConcertSearchPageState();
+  // ignore: library_private_types_in_public_api
+  _ConcertSearchScreenPageState createState() =>
+      _ConcertSearchScreenPageState();
 }
 
-class _ConcertSearchPageState extends State<ConcertSearchPage> {
+class _ConcertSearchScreenPageState extends State<ConcertSearchScreenPage> {
   final TextEditingController sceneController = TextEditingController();
   final TextEditingController dateController = TextEditingController();
   final TextEditingController artisteController = TextEditingController();

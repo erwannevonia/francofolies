@@ -4,7 +4,7 @@ import '../models/concert.dart';
 
 class ApiService {
   static const String baseUrl =
-      'http://127.0.0.1:3000'; //Modifier l'adresse IP du serveur
+      'http://172.16.198.254:3000'; //Modifier l'adresse IP du serveur
 
   static Future<List<Concert>> getConcerts() async {
     final response = await http.get(Uri.parse('$baseUrl/concerts'));

@@ -14,22 +14,22 @@ class FavoritesScreen extends StatelessWidget {
 
     int userId = 1;
 
-    void _addToFavorites(BuildContext context, Concert concert) {
-    // Ajoute un concert aux favoris (peut être stocké en local ou en base de données)
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text("${concert.artiste} ajouté aux favoris"),
-        duration: const Duration(seconds: 2),
-        action: SnackBarAction(
-          label: 'Fermer',
-          onPressed: () {
-            // Some code to undo the change
-          },
-        ),
-      ),
-    );
-  }
+    // void _addToFavorites(BuildContext context, Concert concert) {
+    //   // Ajoute un concert aux favoris (peut être stocké en local ou en base de données)
+    //   ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //     SnackBar(
+    //       content: Text("${concert.artiste} ajouté aux favoris"),
+    //       duration: const Duration(seconds: 2),
+    //       action: SnackBarAction(
+    //         label: 'Fermer',
+    //         onPressed: () {
+    //           // Some code to undo the change
+    //         },
+    //       ),
+    //     ),
+    //   );
+    // }
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -92,9 +92,11 @@ class FavoritesScreen extends StatelessWidget {
                             color: Colors.green,
                           ),
                           onPressed: () {
+                            // ignore: unnecessary_string_interpolations
+                            String artiste = '${concert.artiste}';
                             favorisProvider.toggleFavori(
-                                userId, concert.id);
-                            _addToFavorites(context, concert);
+                                userId, concert.id, artiste, context);
+                            // _addToFavorites(context, concert);
                           },
                         );
                       },

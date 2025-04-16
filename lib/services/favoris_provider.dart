@@ -20,15 +20,41 @@ class FavorisProvider extends ChangeNotifier {
     }
   }
 
-  void toggleFavori(int userId, int concertId) async {
+  void toggleFavori(int userId, int concertId, String artiste, context) async {
     if (_favoris.contains(concertId)) {
       _favoris.remove(concertId);
       // Appelle API pour supprimer
       // ApiService.removeFavori(userId, concertId);
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("$artiste retiré des favoris"),
+          duration: const Duration(seconds: 2),
+          action: SnackBarAction(
+            label: 'Fermer',
+            onPressed: () {
+              // Some code to undo the change
+            },
+          ),
+        ),
+      );
     } else {
       _favoris.add(concertId);
       // Appelle API pour ajouter
       // ApiService.addFavori(userId, concertId);
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("$artiste ajouté aux favoris"),
+          duration: const Duration(seconds: 2),
+          action: SnackBarAction(
+            label: 'Fermer',
+            onPressed: () {
+              // Some code to undo the change
+            },
+          ),
+        ),
+      );
     }
 
     final prefs = await SharedPreferences.getInstance();

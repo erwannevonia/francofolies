@@ -33,23 +33,6 @@ class _ConcertListScreenState extends State<ConcertListScreen> {
     onlyBorder = true;
   }
 
-  // void _addToFavorites(BuildContext context, Concert concert) {
-  //   // Ajoute un concert aux favoris (peut être stocké en local ou en base de données)
-  //   ScaffoldMessenger.of(context).hideCurrentSnackBar();
-  //   ScaffoldMessenger.of(context).showSnackBar(
-  //     SnackBar(
-  //       content: Text("${concert.artiste} ajouté aux favoris"),
-  //       duration: const Duration(seconds: 2),
-  //       action: SnackBarAction(
-  //         label: 'Fermer',
-  //         onPressed: () {
-  //           // Some code to undo the change
-  //         },
-  //       ),
-  //     ),
-  //   );
-  // }
-
   void _reset() {
     artisteController.text = '';
     sceneController.text = '';
@@ -116,52 +99,6 @@ class _ConcertListScreenState extends State<ConcertListScreen> {
                   style: TextStyle(color: Colors.white)),
             );
           } else {
-            // return ListView.builder(
-            //   padding: const EdgeInsets.all(10),
-            //   itemCount: snapshot.data!.length,
-            //   itemBuilder: (context, index) {
-            //     Concert concert = snapshot.data![index];
-            //     return Card(
-            //       color: Colors.grey[900],
-            //       shape: RoundedRectangleBorder(
-            //           borderRadius: BorderRadius.circular(15)),
-            //       margin: const EdgeInsets.symmetric(vertical: 8),
-            //       child: ListTile(
-            //         contentPadding: const EdgeInsets.all(10),
-            //         title: Text(
-            //           concert.artiste,
-            //           style: const TextStyle(
-            //               color: Colors.white,
-            //               fontWeight: FontWeight.bold,
-            //               fontSize: 18),
-            //         ),
-            //         subtitle: Text(
-            //           // "Lieu: ${concert.lieu}\nScène: ${concert.scene}\nArtistes: ${concert.artistes.join(', ')}\nTarif: ${concert.tarif}€",
-            //           '${concert.scene} - ${concert.date}',
-            //           style: TextStyle(color: Colors.grey[400]),
-            //         ),
-            //         trailing: IconButton(
-            //             //icon: Icon(Icons.favorite,
-            //             icon: Icon(
-            //                 (onlyBorder
-            //                     ? Icons.favorite_border
-            //                     : Icons.favorite),
-            //                 color: Colors.green),
-            //             onPressed: () {
-            //               // Forcer un appel à build en mettant à jour l'état
-            //               setState(() {
-            //                 // Inverser la valeur de onlyBorder
-            //                 onlyBorder = !onlyBorder;
-            //                 _addToFavorites(context, concert);
-            //               });
-            //             }),
-            //         onTap: () {
-            //           // Naviguer vers une page de détails du concert (à implémenter)
-            //         },
-            //       ),
-            //     );
-            //   },
-            // );
             return Column(
               children: [
                 Padding(
@@ -236,18 +173,21 @@ class _ConcertListScreenState extends State<ConcertListScreen> {
                       ),
                       const SizedBox(height: 10),
                       const SizedBox(height: 10),
-                      ElevatedButton(
-                        onPressed: _searchConcerts,
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.green),
-                        child: const Text('Rechercher'),
-                      ),
-                      ElevatedButton(
-                        onPressed: _reset,
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.green),
-                        child: const Text('Vider les filtres'),
-                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly, // ou spaceBetween, ou center selon ce que tu veux
+                        children: [
+                          ElevatedButton(
+                            onPressed: _searchConcerts,
+                            style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+                            child: const Text('Rechercher'),
+                          ),
+                          ElevatedButton(
+                            onPressed: _reset,
+                            style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+                            child: const Text('Vider les filtres'),
+                          ),
+                        ],
+                      )
                     ],
                   ),
                 ),
@@ -292,7 +232,6 @@ class _ConcertListScreenState extends State<ConcertListScreen> {
                                   String artiste = '${concert.artiste}';
                                   favorisProvider.toggleFavori(
                                       userId, concert.id, artiste, context);
-                                  // _addToFavorites(context, concert);
                                 },
                               );
                             },

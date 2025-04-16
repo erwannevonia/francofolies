@@ -1,8 +1,9 @@
-//Mano test !
 import 'package:flutter/material.dart';
 import '../services/api_service.dart';
 import '../models/concert.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import '../services/favoris_provider.dart';
 
 class ConcertListScreen extends StatefulWidget {
   const ConcertListScreen({super.key});
@@ -14,7 +15,6 @@ class ConcertListScreen extends StatefulWidget {
 
 class _ConcertListScreenState extends State<ConcertListScreen> {
   late Future<List<Concert>> _concerts;
-  Set<int> _favorisIds = {};
 
   bool onlyBorder = true;
 
@@ -274,29 +274,26 @@ class _ConcertListScreenState extends State<ConcertListScreen> {
                                 fontSize: 18),
                           ),
                           subtitle: Text(
-                            '${concert.scene} - ${concert.date}',
+                            'Lieu: ${concert.scene}\nDate: ${concert.date}',
                             style: TextStyle(color: Colors.grey[400]),
                           ),
-                          trailing: IconButton(
-                            icon: Icon(
-                              (_favorisIds.contains(concert.id)
-                                  ? Icons.favorite
-                                  : Icons.favorite_border),
-                              color: Colors.green,
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                if (_favorisIds.contains(concert.id)) {
-                                  _favorisIds.remove(concert.id);
-                                  // Appel API pour supprimer des favoris
-                                  ApiService.removeFavori(userId, concert.id);
-                                } else {
-                                  _favorisIds.add(concert.id);
-                                  // Appel API pour ajouter aux favoris
-                                  ApiService.addFavori(userId, concert.id);
-                                }
-                                _addToFavorites(context, concert);
-                              });
+                          trailing: Consumer<FavorisProvider>(
+                            builder: (context, favorisProvider, _) {
+                              final isFavori =
+                                  favorisProvider.isFavori(concert.id);
+                              return IconButton(
+                                icon: Icon(
+                                  isFavori
+                                      ? Icons.favorite
+                                      : Icons.favorite_border,
+                                  color: Colors.green,
+                                ),
+                                onPressed: () {
+                                  favorisProvider.toggleFavori(
+                                      userId, concert.id);
+                                  _addToFavorites(context, concert);
+                                },
+                              );
                             },
                           ),
                           onTap: () {

@@ -2,9 +2,16 @@ import 'package:flutter/material.dart';
 import 'screens/concert_list_screen.dart';
 import 'screens/favorites_screen.dart';
 import 'screens/profile_screen.dart';
+import 'package:provider/provider.dart'; // Ajoute ça
+import 'services/favoris_provider.dart'; // Import ton provider
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => FavorisProvider(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

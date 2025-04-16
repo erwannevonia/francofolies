@@ -59,8 +59,7 @@ class ApiService {
     }
   }
 
-  static Future<void> addFavori(
-      int? userId, int? concertId) async {
+  static Future<void> addFavori(int? userId, int? concertId) async {
     final queryParameters = {
       if (userId != null) 'userId': userId,
       if (concertId != null) 'concertId': concertId,
@@ -77,8 +76,7 @@ class ApiService {
     }
   }
 
-  static Future<void> removeFavori(
-      int? userId, int? concertId) async {
+  static Future<void> removeFavori(int? userId, int? concertId) async {
     final queryParameters = {
       if (userId != null) 'userId': userId,
       if (concertId != null) 'concertId': concertId,
@@ -92,6 +90,20 @@ class ApiService {
     if (response.statusCode == 200) {
     } else {
       throw Exception('Erreur de la supppression du concert en favori');
+    }
+  }
+
+  static Future<List<Concert>> getConcertsByIds(List<int> ids) async {
+    if (ids.isEmpty) return [];
+
+    final uri = Uri.http(baseUrl, '/concerts/byIds', {'ids': ids.join(',')});
+    final response = await http.get(uri);
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body);
+      return data.map((json) => Concert.fromJson(json)).toList();
+    } else {
+      throw Exception("Erreur lors du chargement des favoris");
     }
   }
 }

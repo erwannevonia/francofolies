@@ -219,7 +219,6 @@ class _ConcertListScreenState extends State<ConcertListScreen> {
                                     surface: Colors.black,
                                     onSurface: Colors.white,
                                   ),
-                                  dialogBackgroundColor: Colors.grey[900],
                                 ),
                                 child: child!,
                               );

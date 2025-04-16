@@ -96,7 +96,7 @@ class ApiService {
   static Future<List<Concert>> getConcertsByIds(List<int> ids) async {
     if (ids.isEmpty) return [];
 
-    final uri = Uri.http(baseUrl, '/concerts/byIds', {'ids': ids.join(',')});
+    final uri = Uri.parse('$baseUrl/concerts/byIds?ids=${ids.join(',')}');
     final response = await http.get(uri);
 
     if (response.statusCode == 200) {

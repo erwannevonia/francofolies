@@ -26,8 +26,12 @@ class FavoritesScreen extends StatelessWidget {
             return const Center(
               child: CircularProgressIndicator(color: Colors.green),
             );
-          } else if (snapshot.hasError ||
-              !snapshot.hasData ||
+          } else if (snapshot.hasError) {
+            return const Center(
+              child: Text('Erreur lors du chargement',
+                style: TextStyle(color: Colors.white, fontSize: 18)),
+            );
+          } else if (!snapshot.hasData ||
               snapshot.data!.isEmpty) {
             return const Center(
               child: Text('Aucun favori pour l’instant.',
